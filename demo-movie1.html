@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>movie</title>
+    <style>
+      *{
+         padding: 0;
+         margin: 0;
+         list-style: none;
+      }
+      .tpl{
+          display: none;
+      }
+      .wrapper{
+          overflow: hidden;
+          width: 600px;
+          border: 1px solid black;
+          margin: 100px auto 0;
+      }
+      .movicSection{
+          height: 180px;
+          width: 180px;
+          padding: 9px;
+          
+          float: left;
+      }
+      .movicSection img {
+          width: 100%;
+          height: 150px;
+          cursor: pointer;
+      }
+      .movicSection h3 {
+          height: 30px;
+      }
+      .mask{
+          width: 400px;
+          height: 200px;
+          position: absolute;
+          left: 50%;
+          bottom: 50px;
+          margin-left: -200px;
+          margin-top: -100px;
+      }
+      
+    
+    
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+            <div class="tpl">
+                <img src="">
+                <h3 class="movicName"></h3>
+            </div>
+    </div>
+    <div class="mask"></div>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>  
+    <script>
+        (function() {
+            return  $.ajax({
+            url : 'https://easy-mock.com/mock/5c09f40d3c098813c612cce6/movie/power',
+            type:'POST',
+            data:{
+                username : 'xkx',
+                password : '123456'
+            },
+         })
+
+        })().then(function(res){
+            if(res.data.power == 'root'){
+                return $.ajax({
+                    url :'https://easy-mock.com/mock/5c09f40d3c098813c612cce6/movie/movieList',
+                    type :'GET'
+                })
+            }
+        }).then(function(res){
+            var $wrapper = $('.wrapper');                   
+            var data = res.data;
+            var df = $.Deferred();
+            $.each(data,function(index,ele){
+                var $movicSection = $('.tpl').clone().removeClass('tpl').addClass('movicSection');
+                $movicSection.data({id:ele.id})
+                             .on('click',function(){
+                                  df.resolve($(this));
+                             })
+                                .children().eq(0)
+                                        .attr('src',ele.poster)
+                                            .next()
+                                            .text(ele.name)
+                $wrapper.append($movicSection)
+        })
+            return df.promise();
+        }).then(function(res) {
+            return $.ajax({
+                    url :'https://easy-mock.com/mock/5c09f40d3c098813c612cce6/movie/movieInfo',
+                    type:'GET',
+                    data :{
+                        movieId : res.data('id')
+                    }
+        })
+    }).then(function(res){
+        var data = res.data;
+                var direct = data.direct;
+                var gut = data.gut;
+                var mainActor = data.mainActor;
+                var screenwriter = data.screenwriter;
+                $('.mask').html('<p>导演' + direct + '</p>\
+                                <p>导演' + gut + '</p>\
+                                <p>导演' + mainActor.reduce(function(prev,curv){
+                                    prev += curv + '';
+                                    return prev;
+                                },'')+ '</p>\
+                                <p>导演' + screenwriter.reduce(function(prev,curv){
+                                    prev += curv + '';
+                                    return prev;
+                                },'') + '</p>'
+                                
+
+                )
+    })
+         
+       
+    </script>
+    
+</body>
+</html>

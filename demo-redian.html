@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>热点排名</title>
+    <style>
+       *{
+           padding: 0;
+           margin: 0;
+           list-style: none;
+       }
+       .tpl{
+           display: none;
+       }
+       /* 清除浮动 */
+       .clearF::after{
+           content: '';
+           display: block;
+           clear: both;
+           overflow: hidden;
+       }
+       .wrapper{
+           border:1px solid #ccc;
+           padding: 10px 5px;
+           width: 350px;
+           margin: 100px auto 0px;
+       }
+       .wrapper .headSection{
+           margin-bottom: 10px;
+       }
+       .wrapper .headSection .hot{
+           font-size: 18px;
+           font-weight: bold;
+           float: left;
+       }
+       .wrapper .headSection .change{
+           cursor: pointer;
+           float: right;
+           color: #08f;
+       }
+       .wrapper .showSection .number{
+           color: #fff;
+           background-color: #0bf;
+           height: 20px;
+           width: 20px;
+           display: inline-block;
+           text-align: center;
+       }
+       .wrapper .showSection .mes{
+           float: right;
+       }
+       .wrapper .showSection .mes::after{
+           content: '';
+           display: inline-block;
+           width: 15px;
+           height: 15px;
+           background-size: 100% 100%;
+       }
+       .wrapper .showSection .mes.up::after{  
+           background-image: url('./img/up.png');
+           
+       }
+       .wrapper .showSection .mes.down::after{
+           background-image: url('./img/down.png');
+          
+       }
+       
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="headSection clearF">
+            <span class="hot">搜索热点</span>
+            <span class="change">换一换</span>
+        </div>
+        <ul class="showSection">
+            <li class="tpl clearF">
+                <span class="number">1</span>
+                <span class="title">金星</span>
+                <span class="mes">111111</span>
+            </li>
+        </ul>
+
+    </div>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script> 
+    <script>
+         var data =  [{ title : '金星秀停播' , search :47754 , hissearch : 42884 } ,
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 },
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 } ,
+              { title : '金星秀停播' , search :47754 , hissearch : 50000 },
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 } ,
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 },
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 } ,
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 },
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 } ,
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 },
+              { title : '金星秀停播' , search :47754 , hissearch : 42884 } ];
+        
+         (function(data){
+            var $wrapper = $('.wrapper');
+            var $showSection = $wrapper.find('.showSection');
+            var colorArry = ['#f54545','#ff8547','#ffac38'];
+            var curPage = 0;//页数
+            //1 + curPage * 0
+            //1 + curPage * 10
+            //1 + curPage * 20
+            var totalPage = Math.ceil(data.length/10);
+            
+            $showSection.hide();
+            function bindEvent () {
+                 $wrapper.find('.change').on('click',function() {
+                     if(curPage == totalPage){
+                         curPage = 0;
+                     }else{
+                         curPage ++;
+                     }
+                     renderPage(data)
+                 })
+            }
+            function renderPage(data) {
+                 $('.cloneName').empty()
+                 //根据数据渲染页面
+
+                 var len =(data.length - curPage * 10) >= 10 ? 10 : data.length - curPage * 10 ;
+                 for(var i = 0; i < len ;i ++){
+                     var $clone = $showSection.find('.tpl').clone().removeClass('tpl').addClass('cloneName');
+                     var ele = data[i + curPage * 10];
+                     $clone.children('span').eq(0)
+                             .text(i + curPage * 10 + 1).css('backgroundColor',curPage == 0 && colorArry[i])
+                               .next()
+                                 .text(ele.title)
+                                  .next()
+                                    .text(ele.search)
+                                     .addClass(ele.search > ele.hissearch?'up':'down')
+                    $showSection.append($clone);
+                 }
+                 bindEvent()
+                 $showSection.fadeIn();
+
+            }
+            renderPage(data)
+         })(data);
+    </script>
+</body>
+</html>
