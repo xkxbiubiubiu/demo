@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin:0;
+            list-style: none ;
+            text-decoration: none;
+        }
+        .wrapper{
+            margin: 100px;
+        }
+        input{
+            height: 35px;
+            width: 400px;
+        }
+        ul{
+            display: none;
+            width: 400px;
+            border: 1px solid #ccc;
+        }
+        a{
+            color: #999;   
+        }
+        li{
+            
+            height: 28px;
+            line-height: 28px;
+        }
+        li:hover{
+            background-color: #ddd;
+        }
+    
+    
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <input type="text">
+        <ul></ul>
+    </div>
+    <script>
+        //https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=ab&cb=aa
+        var oInput = document.getElementsByTagName('input')[0];
+        var oUl = document.getElementsByTagName('ul')[0];
+        oInput.oninput = function (){
+            var oScript = document.createElement('script');
+            var value = this.value;
+            oScript.src = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd='+ value + '&cb=doJson'
+            document.body.appendChild(oScript)
+    
+           }
+        
+           function doJson(data){
+             var nameArr = data.s;
+             var str = '';
+             if(nameArr.length > 0){
+                nameArr.forEach(function(ele,index){
+                str += '<li><a href = https://www.baidu.com/s?wd='+ele +'>' + ele + '</a></li>';
+                })
+                oUl.style.display = 'block';
+                oUl.innerHTML = str;
+             }else{
+                oUl.style.display = 'none';
+             }
+            
+
+           }
+    
+    </script>
+</body>
+</html>
